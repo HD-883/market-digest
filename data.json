@@ -3,18 +3,18 @@
   "verdicts": [
     {
       "asset": "Stocks",
-      "trend": "Sideways",
-      "note": "S&P 500 weekly move: +0.4%."
+      "trend": "Up",
+      "note": "S&P 500 weekly move: +1.2%."
     },
     {
       "asset": "BTC",
       "trend": "Up",
-      "note": "BTC weekly move: +3.2%."
+      "note": "BTC weekly move: +3.4%."
     },
     {
       "asset": "ETH",
-      "trend": "Up",
-      "note": "ETH weekly move: +4.5%."
+      "trend": "Sideways",
+      "note": "ETH weekly move: +0.6%."
     },
     {
       "asset": "Gold",
@@ -28,20 +28,20 @@
     }
   ],
   "macro": [
-    "10y TIPS real yield \u0394: -18 bps w/w.",
-    "DXY weekly change: -0.8%."
+    "10y TIPS real yield \u0394: -22 bps w/w.",
+    "DXY weekly change: -0.9%."
   ],
   "equities": [
-    "S&P 500: 5,200.00 (+0.40% w/w)."
+    "S&P 500: 5,210.00 (+1.20% w/w)."
   ],
   "crypto": [
-    "BTC: 110,500.00 (+3.20% w/w).",
-    "ETH: 3,930.00 (+4.50% w/w)."
+    "BTC: 110,900.00 (+3.40% w/w).",
+    "ETH: 3,920.00 (+0.60% w/w)."
   ],
   "metals": [
-    "Gold: 3,750.00 (+1.10% w/w).",
-    "Silver: 44.00 (+2.00% w/w).",
-    "Gold/Silver Ratio (GSR): 85.2."
+    "Gold: 3,760.00 (+1.10% w/w).",
+    "Silver: 44.40 (+2.00% w/w).",
+    "Gold/Silver Ratio (GSR): 84.7."
   ],
   "events": [
     "Watch: CPI/PCE, NFP, ISM/PMI, CB minutes.",
@@ -49,5 +49,17 @@
   ],
   "alerts": [
     "No alert triggered this run."
+  ],
+  "watchlist": [
+    {
+      "ticker": "NVDA",
+      "reason": "It might be a good time to buy NVDA: price above 20/50DMA, +3.5% this week.",
+      "wk_change_pct": 3.5
+    },
+    {
+      "ticker": "AMZN",
+      "reason": "It might be a good time to buy AMZN: price above 20/50DMA, +2.2% this week.",
+      "wk_change_pct": 2.2
+    }
   ]
 }

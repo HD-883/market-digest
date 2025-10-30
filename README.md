@@ -1,23 +1,25 @@
-# Market Digest — Auto Site
-Mobile-first, auto-updating site for Stocks, BTC, ETH, Gold & Silver.
+# Market Digest — v3 (Plain-English + Watchlist)
+Mobile-first, auto-updating site with a simple watchlist powered by price momentum.
 
-## One-time setup
-1. Create a **public** GitHub repo, e.g. `market-digest`.
-2. Upload all files in this ZIP preserving folders (`scripts/`, `.github/workflows/`).
-3. Enable **Pages**: Settings → Pages → Source: **Deploy from branch**, Branch: `main`, Folder: **/(root)**.
-4. Allow **Actions**: Settings → Actions → General → Allow all actions.
-5. Within ~1 cycle, your site will be live at: `https://<your-username>.github.io/market-digest/`  
-   Example: `https://ali-weekly.github.io/market-digest/`
+## What’s new
+- **Plain-English headline & bottom line.**
+- **💹 This Week’s Watchlist:** auto-built from large-cap tickers when:
+  - Price > 20-day SMA
+  - Price > 50-day SMA
+  - 20-day SMA > 50-day SMA
+  - 1-week change > 0%
+  → Each entry says: “It might be a good time to buy TICKER …” (non-advisory).
 
-## Data sources (no API keys)
-- Yahoo Finance CSV downloads: ^GSPC, DX-Y.NYB, BTC-USD, ETH-USD, XAUUSD=X, XAGUSD=X
-- FRED fredgraph.csv: DFII10 (10y TIPS real yield)
+## Data sources
+- Yahoo Finance CSV: ^GSPC, DX-Y.NYB, BTC-USD, ETH-USD, XAUUSD=X, XAGUSD=X, and a basket of large caps (AAPL, MSFT, NVDA, AMZN, …).
+- FRED: DFII10 (10-year TIPS real yield).
 
-## Alerts (shown on site)
-- Real yield ±25 bps w/w; DXY ±1.5% w/w; S&P ±3% w/w; BTC ±10% w/w; ETH ±12% w/w; GSR <75 or >90; Gold/Silver ±5% w/w.
+## Setup (replace files)
+1) Upload/replace: `index.html`, `styles.css`, `scripts/update.py`, `.github/workflows/update.yml` (keep same schedule or adjust).
+2) Ensure **Settings → Pages** is set to **Deploy from branch**, **main / (root)**.
 
-## Customize
-- Edit thresholds or add assets in `scripts/update.py`.
-- Change schedule in `.github/workflows/update.yml` (cron).
+## Notes
+- All text is educational and not financial advice.
+- The watchlist is a heuristic screen — not a guarantee of performance.
 
 _Last generated: 2025-10-30_
