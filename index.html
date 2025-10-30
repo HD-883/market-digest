@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Weekly Market Signals Digest</title>
+  <meta name="description" content="Ultra-concise weekly signals for Stocks, Bitcoin, Ethereum, Gold, and Silver. Auto-updated.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="wrap header">
+    <h1>📊 Weekly Market Signals Digest</h1>
+    <p class="sub">Reader-friendly, no fluff. Auto-updated every 6 hours.</p>
+    <p class="date">Last updated: <span id="lastUpdated">—</span></p>
+  </header>
+
+  <main class="wrap">
+    <section id="verdicts" class="card">
+      <h2>🎯 Verdicts (tendency)</h2>
+      <div id="verdictGrid" class="grid"></div>
+    </section>
+
+    <section id="macro" class="card">
+      <h2>🏛️ Macro & Policy</h2>
+      <ul id="macroList" class="bullets"></ul>
+    </section>
+
+    <section id="equities" class="card">
+      <h2>📈 Equities</h2>
+      <ul id="equitiesList" class="bullets"></ul>
+    </section>
+
+    <section id="crypto" class="card">
+      <h2>🪙 Crypto</h2>
+      <ul id="cryptoList" class="bullets"></ul>
+    </section>
+
+    <section id="metals" class="card">
+      <h2>🥇 Gold & 🥈 Silver</h2>
+      <ul id="metalsList" class="bullets"></ul>
+    </section>
+
+    <section id="events" class="card">
+      <h2>🗓️ Next 7–10 Days</h2>
+      <ul id="eventsList" class="bullets"></ul>
+    </section>
+
+    <section id="alerts" class="card alert">
+      <h2>🚨 Alerts</h2>
+      <ul id="alertsList" class="bullets"></ul>
+      <p class="hint">Rules: Real yield ±25 bps WoW, DXY ±1.5% WoW, GSR &lt; 75 or &gt; 90, BTC ±10% WoW, ETH ±12%, Gold/Silver ±5%.</p>
+    </section>
+  </main>
+
+  <footer class="wrap foot">
+    <p>Made for Ali • Mobile-first • Bookmark this page</p>
+  </footer>
+
+  <script>
+  async function loadData() {
+    try {
+      const resp = await fetch('data.json?cache=' + Date.now());
+      const d = await resp.json();
+      render(d);
+    } catch (e) {
+      console.error(e);
+      document.querySelector('#verdictGrid').innerHTML = '<p class="muted">Unable to load data.json.</p>';
+    }
+  }
+  function render(d) {
+    document.getElementById('lastUpdated').textContent = d.last_updated || '—';
+    const v = d.verdicts || [];
+    const vgrid = document.getElementById('verdictGrid');
+    vgrid.innerHTML = v.map(item => `
+      <div class="tile">
+        <div class="label">${item.asset}</div>
+        <div class="trend ${item.trend.toLowerCase()}">${item.trend}</div>
+        <div class="notes">${item.note || ''}</div>
+      </div>
+    `).join('');
+
+    function fill(listId, arr) {
+      const el = document.getElementById(listId);
+      el.innerHTML = (arr || []).map(x => `<li>${x}</li>`).join('');
+    }
+    fill('macroList', d.macro);
+    fill('equitiesList', d.equities);
+    fill('cryptoList', d.crypto);
+    fill('metalsList', d.metals);
+    fill('eventsList', d.events);
+    fill('alertsList', d.alerts);
+  }
+  loadData();
+  </script>
+</body>
+</html>
