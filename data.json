@@ -1,50 +1,53 @@
 {
-  "last_updated": "2025-10-30",
+  "last_updated": "2025-10-30 12:00 UTC",
   "verdicts": [
     {
       "asset": "Stocks",
       "trend": "Sideways",
-      "note": "Awaiting first auto-refresh."
+      "note": "S&P 500 weekly move: +0.4%."
     },
     {
       "asset": "BTC",
-      "trend": "Sideways",
-      "note": "Awaiting first auto-refresh."
+      "trend": "Up",
+      "note": "BTC weekly move: +3.2%."
     },
     {
       "asset": "ETH",
-      "trend": "Sideways",
-      "note": "Awaiting first auto-refresh."
+      "trend": "Up",
+      "note": "ETH weekly move: +4.5%."
     },
     {
       "asset": "Gold",
-      "trend": "Sideways",
-      "note": "Awaiting first auto-refresh."
+      "trend": "Up",
+      "note": "Gold weekly move: +1.1%."
     },
     {
       "asset": "Silver",
-      "trend": "Sideways",
-      "note": "Awaiting first auto-refresh."
+      "trend": "Up",
+      "note": "Silver weekly move: +2.0%."
     }
   ],
   "macro": [
-    "Auto-updates real yield (10y TIPS) and DXY change vs 7 days.",
-    "Tracks CPI/Jobs event windows via calendar text hints."
+    "10y TIPS real yield \u0394: -18 bps w/w.",
+    "DXY weekly change: -0.8%."
   ],
   "equities": [
-    "S&P 500 weekly % change auto-updates.",
-    "Valuation/breadth notes kept concise."
+    "S&P 500: 5,200.00 (+0.40% w/w)."
   ],
   "crypto": [
-    "BTC/ETH weekly % change and basic context."
+    "BTC: 110,500.00 (+3.20% w/w).",
+    "ETH: 3,930.00 (+4.50% w/w)."
   ],
   "metals": [
-    "Gold/Silver weekly change and Gold-to-Silver Ratio."
+    "Gold: 3,750.00 (+1.10% w/w).",
+    "Silver: 44.00 (+2.00% w/w).",
+    "Gold/Silver Ratio (GSR): 85.2."
   ],
   "events": [
-    "Key macro next 7\u201310 days summarized by bot."
+    "Watch: CPI/PCE, NFP, ISM/PMI, CB minutes.",
+    "Earnings: megacaps/semis/banks."
   ],
   "alerts": [
-    "First run will compute alerts and display here."
+    "No alert triggered this run."
   ]
 }
