@@ -1,9 +1,8 @@
-<!-- rebuild -->
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Weekly Market Signals Digest</title>
   <meta name="description" content="Ultra-concise weekly signals for Stocks, Bitcoin, Ethereum, Gold, and Silver. Auto-updated.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,9 +14,16 @@
     <h1>📊 Weekly Market Signals Digest</h1>
     <p class="sub">Reader-friendly, no fluff. Auto-updated every 6 hours.</p>
     <p class="date">Last updated: <span id="lastUpdated">—</span></p>
+
+    <div class="actions">
+      <button id="refreshBtn" class="btn">🔄 Refresh</button>
+      <button id="alertsBtn" class="btn alt">⚡ Show Only Alerts</button>
+      <button id="copyBtn" class="btn">📋 Copy Summary</button>
+      <button id="shareBtn" class="btn">📣 Share</button>
+    </div>
   </header>
 
-  <main class="wrap">
+  <main class="wrap" id="contentRoot">
     <section id="verdicts" class="card">
       <h2>🎯 Verdicts (tendency)</h2>
       <div id="verdictGrid" class="grid"></div>
@@ -53,37 +59,51 @@
       <ul id="alertsList" class="bullets"></ul>
       <p class="hint">Rules: Real yield ±25 bps WoW, DXY ±1.5% WoW, GSR &lt; 75 or &gt; 90, BTC ±10% WoW, ETH ±12%, Gold/Silver ±5%.</p>
     </section>
+
+    <section id="summary" class="card highlight">
+      <h2>🧠 Brief Summary — Educated Hypothesis</h2>
+      <ul id="summaryList" class="bullets"></ul>
+      <div class="note">This is an educational, non-advisory synthesis built from the data above.</div>
+    </section>
   </main>
 
   <footer class="wrap foot">
-    <p>Made for Ali • Mobile-first • Bookmark this page</p>
+    <p>Mobile-first • Bookmark this page</p>
   </footer>
 
   <script>
-  async function loadData() {
-    try {
-      const resp = await fetch('data.json?cache=' + Date.now());
-      const d = await resp.json();
-      render(d);
-    } catch (e) {
-      console.error(e);
-      document.querySelector('#verdictGrid').innerHTML = '<p class="muted">Unable to load data.json.</p>';
-    }
+  let rawData = null;
+  let alertsOnly = false;
+
+  async function fetchData() {
+    const resp = await fetch('data.json?cache=' + Date.now());
+    return await resp.json();
   }
+
+  function verdictEmoji(trend) {
+    const t = (trend || '').toLowerCase();
+    if (t === 'up') return '⬆️';
+    if (t === 'down') return '⬇️';
+    return '➡️';
+  }
+
   function render(d) {
+    rawData = d;
     document.getElementById('lastUpdated').textContent = d.last_updated || '—';
-    const v = d.verdicts || [];
+
+    // Verdicts
     const vgrid = document.getElementById('verdictGrid');
-    vgrid.innerHTML = v.map(item => `
+    vgrid.innerHTML = (d.verdicts || []).map(item => `
       <div class="tile">
         <div class="label">${item.asset}</div>
-        <div class="trend ${item.trend.toLowerCase()}">${item.trend}</div>
+        <div class="trend ${item.trend.toLowerCase()}">${verdictEmoji(item.trend)} ${item.trend}</div>
         <div class="notes">${item.note || ''}</div>
       </div>
     `).join('');
 
-    function fill(listId, arr) {
-      const el = document.getElementById(listId);
+    // Bullets
+    function fill(id, arr) {
+      const el = document.getElementById(id);
       el.innerHTML = (arr || []).map(x => `<li>${x}</li>`).join('');
     }
     fill('macroList', d.macro);
@@ -92,8 +112,73 @@
     fill('metalsList', d.metals);
     fill('eventsList', d.events);
     fill('alertsList', d.alerts);
+
+    buildSummary(d);
+    applyAlertsFilter();
   }
-  loadData();
+
+  // Bottom summary (non-advisory heuristics)
+  function buildSummary(d) {
+    const out = [];
+    const vmap = {};
+    (d.verdicts || []).forEach(v => { vmap[v.asset] = (v.trend || 'Sideways').toLowerCase(); });
+
+    if (vmap['Gold'] === 'up') out.push('Gold bias: constructive — consider staggered entries; supportive if real yields falling.');
+    if (vmap['Silver'] === 'up') out.push('Silver bias: higher-beta upside — add only if comfortable with volatility; watch GSR.');
+    if (vmap['BTC'] === 'up') out.push('BTC bias: momentum friendly — position sizing matters; watch 7d % change & funding.');
+    if (vmap['ETH'] === 'up') out.push('ETH bias: follows BTC with catalysts from L2 activity/ETFs.');
+    if (vmap['Stocks'] === 'up') out.push('Equities bias: selective risk-on — favour quality/breadth improvement.');
+    if (vmap['Stocks'] === 'down') out.push('Equities caution: trim risk or rotate defensives until breadth improves.');
+
+    const alerts = (d.alerts || []).filter(a => a && a.indexOf('No alert') === -1);
+    if (alerts.some(a => a.includes('GSR'))) out.push('Signal: GSR extreme — potential relative move in silver vs gold.');
+    if (alerts.some(a => a.includes('DXY'))) out.push('Signal: Dollar swing — cross-asset impact likely near-term.');
+    if (alerts.some(a => a.includes('Real yield'))) out.push('Signal: Real-yield shift — reassess risk vs hedges.');
+
+    if (out.length === 0) out.push('Base case: Sideways — stay diversified; await stronger signals.');
+
+    const ul = document.getElementById('summaryList');
+    ul.innerHTML = out.map(x => `<li>${x}</li>`).join('');
+  }
+
+  function applyAlertsFilter() {
+    const ids = ['verdicts','macro','equities','crypto','metals','events'];
+    ids.forEach(id => {
+      const el = document.getElementById(id);
+      el.style.display = alertsOnly ? 'none' : '';
+    });
+    document.getElementById('alerts').style.display = '';
+    document.getElementById('summary').style.display = '';
+    document.getElementById('alertsBtn').textContent = alertsOnly ? '📋 Show All Sections' : '⚡ Show Only Alerts';
+  }
+
+  async function init() {
+    try { render(await fetchData()); }
+    catch (e) {
+      console.error(e);
+      document.getElementById('verdictGrid').innerHTML = '<p class="muted">Unable to load data.json.</p>';
+    }
+
+    document.getElementById('refreshBtn').addEventListener('click', () => location.reload());
+    document.getElementById('alertsBtn').addEventListener('click', () => { alertsOnly = !alertsOnly; applyAlertsFilter(); });
+
+    document.getElementById('copyBtn').addEventListener('click', async () => {
+      const items = Array.from(document.querySelectorAll('#summaryList li')).map(li => '• ' + li.textContent);
+      const text = `Weekly Market Signals — Brief Summary\n\n` + items.join('\n');
+      try { await navigator.clipboard.writeText(text); alert('Summary copied.'); } catch(_) { alert('Copy failed.'); }
+    });
+
+    document.getElementById('shareBtn').addEventListener('click', async () => {
+      const items = Array.from(document.querySelectorAll('#summaryList li')).map(li => '• ' + li.textContent);
+      const text = `Weekly Market Signals — Brief Summary\n\n` + items.join('\n');
+      if (navigator.share) {
+        try { await navigator.share({ title: 'Weekly Market Summary', text }); } catch(_) {}
+      } else {
+        try { await navigator.clipboard.writeText(text); alert('Shared text copied to clipboard.'); } catch(_) { alert('Copy failed.'); }
+      }
+    });
+  }
+  init();
   </script>
 </body>
 </html>
